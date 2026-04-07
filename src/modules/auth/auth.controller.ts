@@ -9,7 +9,7 @@ import { Public } from '../../common/decorators/public.decorator'
 @Controller('/api/auth')
 export class AuthController {
   @Post('sign-up/email')
-  @ApiOperation({ summary: 'Registrar padre' })
+  @ApiOperation({ summary: 'Register parent' })
   @ApiBody({
     schema: {
       type: 'object',
@@ -21,13 +21,13 @@ export class AuthController {
       },
     },
   })
-  @ApiResponse({ status: 200, description: 'Padre registrado' })
+  @ApiResponse({ status: 200, description: 'Parent registered' })
   signUp(@Req() req: any, @Res() res: any) {
     return toNodeHandler(auth)(req, res)
   }
 
   @Post('sign-in/email')
-  @ApiOperation({ summary: 'Login padre' })
+  @ApiOperation({ summary: 'Parent sign in' })
   @ApiBody({
     schema: {
       type: 'object',
@@ -38,13 +38,13 @@ export class AuthController {
       },
     },
   })
-  @ApiResponse({ status: 200, description: 'Sesión iniciada' })
+  @ApiResponse({ status: 200, description: 'Session started' })
   signInEmail(@Req() req: any, @Res() res: any) {
     return toNodeHandler(auth)(req, res)
   }
 
   @Post('sign-in/username')
-  @ApiOperation({ summary: 'Login niño' })
+  @ApiOperation({ summary: 'Child sign in' })
   @ApiBody({
     schema: {
       type: 'object',
@@ -55,14 +55,14 @@ export class AuthController {
       },
     },
   })
-  @ApiResponse({ status: 200, description: 'Sesión iniciada' })
+  @ApiResponse({ status: 200, description: 'Session started' })
   signInUsername(@Req() req: any, @Res() res: any) {
     return toNodeHandler(auth)(req, res)
   }
 
   @Post('sign-out')
-  @ApiOperation({ summary: 'Cerrar sesión' })
-  @ApiResponse({ status: 200, description: 'Sesión cerrada' })
+  @ApiOperation({ summary: 'Sign out' })
+  @ApiResponse({ status: 200, description: 'Session ended' })
   signOut(@Req() req: any, @Res() res: any) {
     return toNodeHandler(auth)(req, res)
   }

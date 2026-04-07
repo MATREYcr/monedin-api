@@ -36,27 +36,6 @@ export const auth = betterAuth({
         defaultValue: 'PARENT',
         input: false,
       },
-      age: {
-        type: 'number',
-        required: false,
-        input: false,
-      },
-      avatar: {
-        type: 'string',
-        required: false,
-        input: false,
-      },
-      coins: {
-        type: 'number',
-        required: false,
-        defaultValue: 0,
-        input: false,
-      },
-      parentId: {
-        type: 'string',
-        required: false,
-        input: false,
-      },
     },
   },
 })

@@ -23,7 +23,7 @@ export type Env = z.infer<typeof envSchema>
 export function validateConfig(config: Record<string, unknown>) {
   const result = envSchema.safeParse(config)
   if (!result.success) {
-    console.error('❌ Variables de entorno inválidas:')
+    console.error('❌ Invalid environment variables:')
     console.error(result.error.flatten().fieldErrors)
     process.exit(1)
   }

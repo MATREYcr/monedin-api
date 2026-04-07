@@ -11,7 +11,7 @@ export class ChildrenService {
     const existing = await this.prisma.user.findUnique({
       where: { username: dto.username },
     })
-    if (existing) throw new ConflictException('Username ya está en uso')
+    if (existing) throw new ConflictException('Username already taken')
 
     const { user } = await auth.api.createUser({
       body: {
@@ -19,39 +19,36 @@ export class ChildrenService {
         email: `${dto.username}@child.monedin`,
         password: dto.password,
         role: 'user',
-        data: { username: dto.username },
+        data: { username: dto.username, familyRole: 'CHILD' },
       },
     })
 
-    return this.prisma.user.update({
-      where: { id: user.id },
+    return this.prisma.childProfile.create({
       data: {
-        familyRole: 'CHILD',
+        userId: user.id,
         parentId,
         age: dto.age,
         avatar: dto.avatar,
       },
       select: {
         id: true,
-        name: true,
-        username: true,
         age: true,
         avatar: true,
         coins: true,
+        user: { select: { id: true, name: true, username: true } },
       },
     })
   }
 
   findByParent(parentId: string) {
-    return this.prisma.user.findMany({
+    return this.prisma.childProfile.findMany({
       where: { parentId },
       select: {
         id: true,
-        name: true,
-        username: true,
         age: true,
         avatar: true,
         coins: true,
+        user: { select: { id: true, name: true, username: true } },
       },
     })
   }
