@@ -7,6 +7,7 @@
     "build": "nest build",
     "db:migrate": "prisma migrate dev",
     "db:generate": "prisma generate",
+    "db:seed": "ts-node prisma/seed.ts",
     "db:studio": "prisma studio",
     "start": "node dist/main",
     "start:dev": "nest start --watch",
@@ -48,6 +49,9 @@
     "ts-jest": "^29.0.0",
     "ts-node": "^10.9.0",
     "typescript": "^5.7.0"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
   },
   "pnpm": {
     "onlyBuiltDependencies": [

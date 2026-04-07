@@ -19,7 +19,7 @@ async function bootstrap() {
   if (env.NODE_ENV !== 'production') {
     const config = new DocumentBuilder()
       .setTitle('Monedin API')
-      .setDescription('Backend REST para la plataforma Monedin')
+      .setDescription('REST backend for the Monedin platform')
       .setVersion('1.0')
       .build()
     const document = SwaggerModule.createDocument(app, config)
@@ -30,7 +30,7 @@ async function bootstrap() {
 
   const port = env.PORT
   await app.listen(port)
-  console.log(`🚀 Monedin API corriendo en http://localhost:${port}`)
-  console.log(`📚 Swagger disponible en http://localhost:${port}/docs`)
+  console.log(`🪙 Monedin API running on http://localhost:${port}`)
+  console.log(`📚 Swagger available at http://localhost:${port}/docs`)
 }
 bootstrap()

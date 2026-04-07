@@ -29,18 +29,27 @@ model User {
 
   // Monedin
   familyRole    Role      @default(PARENT)
-  age           Int?
-  avatar        String?
-  coins         Int       @default(0)
-
-  // Relación padre-hijo
-  parentId      String?
-  parent        User?     @relation("FamilyRelation", fields: [parentId], references: [id])
-  children      User[]    @relation("FamilyRelation")
 
   // Better Auth
   sessions      Session[]
   accounts      Account[]
+
+  // Relaciones Monedin
+  childProfile      ChildProfile?  @relation("UserProfile")
+  childrenProfiles  ChildProfile[] @relation("ParentChildren")
+}
+
+model ChildProfile {
+  id       String  @id @default(cuid())
+  coins    Int     @default(0)
+  age      Int?
+  avatar   String?
+
+  userId   String  @unique
+  user     User    @relation("UserProfile", fields: [userId], references: [id], onDelete: Cascade)
+
+  parentId String
+  parent   User    @relation("ParentChildren", fields: [parentId], references: [id])
 }
 
 // Tablas generadas por Better Auth (npx better-auth generate)
