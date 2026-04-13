@@ -5,6 +5,8 @@ import { validateConfig } from './config/configuration'
 import { PrismaModule } from './prisma/prisma.module'
 import { AuthModule } from './modules/auth/auth.module'
 import { ChildrenModule } from './modules/children/children.module'
+import { TasksModule } from './modules/tasks/tasks.module'
+import { RewardsModule } from './modules/rewards/rewards.module'
 import { AuthGuard } from './common/guards/auth.guard'
 import { RolesGuard } from './common/guards/roles.guard'
 import { AllExceptionsFilter } from './common/filters/http-exception.filter'
@@ -18,6 +20,8 @@ import { AllExceptionsFilter } from './common/filters/http-exception.filter'
     PrismaModule,
     AuthModule,
     ChildrenModule,
+    TasksModule,
+    RewardsModule,
   ],
   providers: [
     {
