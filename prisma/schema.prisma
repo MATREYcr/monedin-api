@@ -11,6 +11,19 @@ enum Role {
   CHILD
 }
 
+enum RedemptionStatus {
+  PENDING    // niño solicitó, esperando decisión del padre
+  APPROVED   // padre aprobó, monedas descontadas
+  REJECTED   // padre rechazó
+}
+
+enum TaskStatus {
+  PENDING    // created, awaiting child action
+  COMPLETED  // child marked done, awaiting parent approval
+  APPROVED   // parent approved, coins awarded
+  REJECTED   // parent rejected, back to PENDING
+}
+
 model User {
   id            String    @id
   name          String
@@ -37,6 +50,8 @@ model User {
   // Relaciones Monedin
   childProfile      ChildProfile?  @relation("UserProfile")
   childrenProfiles  ChildProfile[] @relation("ParentChildren")
+  tasks             Task[]         @relation("ParentTasks")
+  rewards           Reward[]       @relation("ParentRewards")
 }
 
 model ChildProfile {
@@ -50,6 +65,69 @@ model ChildProfile {
 
   parentId String
   parent   User    @relation("ParentChildren", fields: [parentId], references: [id])
+
+  tasks              Task[]
+  redemptions        RewardRedemption[]
+  rewardAssignments  RewardAssignment[]
+}
+
+model Task {
+  id          String     @id @default(cuid())
+  title       String
+  description String?
+  coins       Int        @default(0)
+  status      TaskStatus @default(PENDING)
+  dueDate     DateTime?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  childId     String
+  child       ChildProfile @relation(fields: [childId], references: [id], onDelete: Cascade)
+
+  parentId    String
+  parent      User         @relation("ParentTasks", fields: [parentId], references: [id])
+}
+
+model Reward {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  image       String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  parentId    String
+  parent      User     @relation("ParentRewards", fields: [parentId], references: [id])
+
+  assignments RewardAssignment[]
+  redemptions RewardRedemption[]
+}
+
+model RewardAssignment {
+  coins    Int
+
+  rewardId String
+  reward   Reward       @relation(fields: [rewardId], references: [id], onDelete: Cascade)
+
+  childId  String
+  child    ChildProfile @relation(fields: [childId], references: [id], onDelete: Cascade)
+
+  @@id([rewardId, childId])
+}
+
+model RewardRedemption {
+  id        String            @id @default(cuid())
+  coins     Int
+  status    RedemptionStatus  @default(PENDING)
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+
+  rewardId  String
+  reward    Reward       @relation(fields: [rewardId], references: [id])
+
+  childId   String
+  child     ChildProfile @relation(fields: [childId], references: [id], onDelete: Cascade)
 }
 
 // Tablas generadas por Better Auth (npx better-auth generate)

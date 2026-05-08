@@ -5,7 +5,7 @@ import { AppModule } from './app.module'
 import { env } from './config/configuration'
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule)
+  const app = await NestFactory.create(AppModule, { logger: ['log', 'warn', 'error', 'debug'] })
 
   app.enableCors({
     origin: env.FRONTEND_URL,

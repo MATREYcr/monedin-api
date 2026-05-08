@@ -8,6 +8,10 @@ dist/
 .env
 .env.local
 
+# Claude local overrides
+CLAUDE.local.md
+.claude/settings.local.json
+
 # Logs
 *.log
 npm-debug.log*
