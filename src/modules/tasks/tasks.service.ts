@@ -30,23 +30,33 @@ export class TasksService {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(dto: CreateTaskDto, user: User) {
-    const child = await this.prisma.childProfile.findUnique({
-      where: { id: dto.childId },
-    })
-    if (!child) throw new NotFoundException('Child not found')
-    if (child.parentId !== user.id) throw new ForbiddenException('Not your child')
+    const items =
+      dto.assignments ??
+      dto.childIds!.map((childId) => ({ childId, coins: dto.coins! }))
 
-    return this.prisma.task.create({
-      data: {
-        title: dto.title,
-        description: dto.description,
-        coins: dto.coins,
-        dueDate: dto.dueDate,
-        childId: dto.childId,
-        parentId: user.id,
-      },
-      select: TASK_SELECT,
+    const children = await this.prisma.childProfile.findMany({
+      where: { id: { in: items.map((i) => i.childId) } },
     })
+    if (children.length !== items.length) throw new NotFoundException('One or more children not found')
+    if (children.some((c) => c.parentId !== user.id)) throw new ForbiddenException('Not your child')
+
+    const tasks = await this.prisma.$transaction(
+      items.map(({ childId, coins }) =>
+        this.prisma.task.create({
+          data: {
+            title: dto.title,
+            description: dto.description,
+            coins: coins ?? 0,
+            dueDate: dto.dueDate,
+            childId,
+            parentId: user.id,
+          },
+          select: TASK_SELECT,
+        }),
+      ),
+    )
+
+    return tasks
   }
 
   async findAll(user: User) {

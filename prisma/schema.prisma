@@ -66,8 +66,9 @@ model ChildProfile {
   parentId String
   parent   User    @relation("ParentChildren", fields: [parentId], references: [id])
 
-  tasks       Task[]
-  redemptions RewardRedemption[]
+  tasks              Task[]
+  redemptions        RewardRedemption[]
+  rewardAssignments  RewardAssignment[]
 }
 
 model Task {
@@ -91,7 +92,6 @@ model Reward {
   id          String   @id @default(cuid())
   title       String
   description String?
-  coins       Int      @default(0)
   image       String?
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
@@ -100,17 +100,31 @@ model Reward {
   parentId    String
   parent      User     @relation("ParentRewards", fields: [parentId], references: [id])
 
+  assignments RewardAssignment[]
   redemptions RewardRedemption[]
+}
+
+model RewardAssignment {
+  coins    Int
+
+  rewardId String
+  reward   Reward       @relation(fields: [rewardId], references: [id], onDelete: Cascade)
+
+  childId  String
+  child    ChildProfile @relation(fields: [childId], references: [id], onDelete: Cascade)
+
+  @@id([rewardId, childId])
 }
 
 model RewardRedemption {
   id        String            @id @default(cuid())
+  coins     Int
   status    RedemptionStatus  @default(PENDING)
   createdAt DateTime          @default(now())
   updatedAt DateTime          @updatedAt
 
   rewardId  String
-  reward    Reward       @relation(fields: [rewardId], references: [id], onDelete: Cascade)
+  reward    Reward       @relation(fields: [rewardId], references: [id])
 
   childId   String
   child     ChildProfile @relation(fields: [childId], references: [id], onDelete: Cascade)
