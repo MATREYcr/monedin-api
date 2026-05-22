@@ -6,7 +6,7 @@ import { Public } from '../../common/decorators/public.decorator'
 
 @Public()
 @ApiTags('Auth')
-@Controller('/api/auth')
+@Controller('auth')
 export class AuthController {
   @Post('sign-up/email')
   @ApiOperation({ summary: 'Register parent' })
