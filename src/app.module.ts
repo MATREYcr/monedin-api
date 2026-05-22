@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common'
+import { AppController } from './app.controller'
 import { ConfigModule } from '@nestjs/config'
 import { APP_GUARD, APP_FILTER } from '@nestjs/core'
 import { validateConfig } from './config/configuration'
@@ -12,6 +13,7 @@ import { RolesGuard } from './common/guards/roles.guard'
 import { AllExceptionsFilter } from './common/filters/http-exception.filter'
 
 @Module({
+  controllers: [AppController],
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
